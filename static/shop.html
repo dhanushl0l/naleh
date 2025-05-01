@@ -1,0 +1,99 @@
+<div class="product-list" id="productList"></div>
+<style>
+    nav {
+        z-index: 0;}
+</style>
+<div class="search-container">
+    <input type="text" class="search-input" placeholder="Search...">
+</div>
+<div class="modal" id="productModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="image-gallery" id="imageGallery"></div>
+        <div class="main-image"><img id="mainImage" src="" alt=""></div>
+        <div class="details">
+            <h1 id="productName"></h1>
+            <p class="price" id="productPrice"></p>
+            <p class="emi">EMI from ₹1,309/month</p>
+            <button class="add-to-cart">ADD TO CART</button>
+            <div class="info-box">
+                <h3>Delivery</h3>
+                <p>Dispatches in 24 hours</p>
+            </div>
+            <div class="info-box">
+                <h3>Returns & Warranty</h3>
+                <p>7 Day Replacement Guarantee</p>
+                <p>2 Year Warranty</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let products = [];
+
+    const productList = document.getElementById("productList");
+    const modal = document.getElementById("productModal");
+    const imageGallery = document.getElementById("imageGallery");
+    const mainImage = document.getElementById("mainImage");
+    const productName = document.getElementById("productName");
+    const productPrice = document.getElementById("productPrice");
+
+    function renderProducts(list) {
+        productList.innerHTML = "";
+        list.forEach(product => {
+            const item = document.createElement("div");
+            item.className = "product-item";
+            item.innerHTML =
+                `<img src="${product.banner}" alt=""><h3>${product.name}</h3><p class='price'>${product.price}</p>`;
+            item.onclick = () => openModal(product);
+            productList.appendChild(item);
+        });
+    }
+
+    function openModal(product) {
+        productName.textContent = product.name;
+        productPrice.innerHTML = `${product.price} <span class='old-price'>${product.oldPrice}</span>`;
+        mainImage.src = product.banner;
+        imageGallery.innerHTML = "";
+        product.images.forEach(img => {
+            const imgElem = document.createElement("img");
+            imgElem.src = img;
+            imgElem.onclick = () => mainImage.src = img;
+            imageGallery.appendChild(imgElem);
+        });
+        modal.style.display = "flex";
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+    }
+
+    function searchProducts(searchText) {
+        searchText = searchText.toLowerCase();
+        const filtered = products.filter(p => p.name.toLowerCase().includes(searchText));
+        renderProducts(filtered);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("/api/products")
+            .then(res => res.json())
+            .then(data => {
+                products = data;
+                renderProducts(products);
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchTerm = urlParams.get("searchterm");
+                if (searchTerm) {
+                    const searchInput = document.querySelector(".search-input");
+                    searchInput.value = searchTerm;
+                    searchProducts(searchTerm);
+                }
+            });
+    });
+
+    document.querySelector(".search-input").addEventListener("input", function () {
+        searchProducts(this.value);
+    });
+</script>
+ 

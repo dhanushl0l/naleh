@@ -1,0 +1,224 @@
+<dev>
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search..." id="searchBox">
+    </div>
+    
+    <script>
+    document.getElementById("searchBox").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {  // Check if Enter key is pressed
+            event.preventDefault();  // Prevent form submission (if inside a form)
+            const query = encodeURIComponent(this.value.trim()); // Get input value
+            if (query) {
+                window.location.href = `/services?searchterm=${query}`;
+            }
+        }
+    });
+    </script>
+    
+
+    <div id="homepage-section-4">
+        <div class="homepage-section-1">
+            <img src="static/img/logo.png" id="logo" alt="image" loading="lazy">
+            <div class="box1">
+                <h1 class="slogon">Nale – Nourish Your Skin, Indulge Your Senses.</h1>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="homepage-section-4">
+        <div class="homepage-section-4" style="background-color:#FFDEF3;">
+            <img src="https://www.drunkelephant.com/on/demandware.static/-/Sites-drunkelephant_us-Library/default/dwad0e95b0/contentassetimages/2025/grid/US_February_Deluxe_Sample_Promo_HP_2000px.gif"
+                id="centred-image" alt="image" loading="lazy">
+
+            <div class="box2">
+                <div class="box2_box1">
+                    <p class="de-heading-3_1" id="section-3-heading-1">
+                        <span>our game-changing<br> skin philosophy</span>
+                    </p>
+                    <p class="de-description-3_1">
+                        Effective, biocompatible actives—without the <br class="show-for-desktop">
+                        six ingredients that can spell trouble. <br class="show-for-desktop">
+                        We call them the Suspicious 6.
+                    </p>
+                    <button>view</button>
+                </div>
+            </div>
+        </div>
+    </div>
+      
+    <div id="homepage-section-4">
+        <div class="homepage-section-4" style="background-color:#FFDEF3;">
+            <div class="box2">
+                <div class="box2_box1 box2_100">
+                    <p class="de-heading-3_1" id="section-3-heading-1">
+                        <span>our game-changing<br> skin philosophy</span>
+                    </p>
+                    <p class="de-description-3_1">
+                        Effective, biocompatible actives—without the <br class="show-for-desktop">
+                        six ingredients that can spell trouble. <br class="show-for-desktop">
+                        We call them the Suspicious 6.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="homepage-section-4">
+        <div class="homepage-section-4 homepage-section-4-listing" style="background-color:#FFDEF3;">
+            <div class="prodects">
+                <div class="product-list-home" id="productList"></div>
+                <div class="modal" id="productModal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <div class="image-gallery" id="imageGallery"></div>
+                        <div class="main-image"><img id="mainImage" src="" alt=""></div>
+                        <div class="details">
+                            <h1 id="productName"></h1>
+                            <p class="price" id="productPrice"></p>
+                            <p class="emi">EMI from ₹1,309/month</p>
+                            <button class="add-to-cart">ADD TO CART</button>
+                            <div class="info-box">
+                                <h3>Delivery</h3>
+                                <p>Dispatches in 24 hours</p>
+                            </div>
+                            <div class="info-box">
+                                <h3>Returns & Warranty</h3>
+                                <p>7 Day Replacement Guarantee</p>
+                                <p>2 Year Warranty</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    const products = [{
+                            name: "Product 1",
+                            price: "₹26,999",
+                            oldPrice: "₹29,999",
+                            banner: "static/img/img1.jpg",
+                            images: ["static/img/img1.jpg", "static/img/img2.jpg", "static/img/img3.jpg"]
+                        },
+                        {
+                            name: "Product 2",
+                            price: "₹19,999",
+                            oldPrice: "₹24,999",
+                            banner: "static/img/img1.jpg",
+                            images: ["static/img/img1.jpg", "static/img/img2.jpg", "static/img/img3.jpg"]
+                        },
+                        {
+                            name: "Product 2",
+                            price: "₹19,999",
+                            oldPrice: "₹24,999",
+                            banner: "static/img/img1.jpg",
+                            images: ["static/img/img1.jpg", "static/img/img2.jpg", "static/img/img3.jpg"]
+                        },
+                        {
+                            name: "Product 2",
+                            price: "₹19,999",
+                            oldPrice: "₹24,999",
+                            banner: "static/img/img1.jpg",
+                            images: ["static/img/img1.jpg", "static/img/img2.jpg", "static/img/img3.jpg"]
+                        },
+                        {
+                            name: "Product 2",
+                            price: "₹19,999",
+                            oldPrice: "₹24,999",
+                            banner: "static/img/img1.jpg",
+                            images: ["static/img/img1.jpg", "static/img/img2.jpg", "static/img/img3.jpg"]
+                        },
+                        {
+                            name: "Product 2",
+                            price: "₹19,999",
+                            oldPrice: "₹24,999",
+                            banner: "static/img/img1.jpg",
+                            images: ["static/img/img1.jpg", "static/img/img2.jpg", "static/img/img3.jpg"]
+                        },
+                        {
+                            name: "Product 2",
+                            price: "₹19,999",
+                            oldPrice: "₹24,999",
+                            banner: "static/img/img1.jpg",
+                            images: ["static/img/img1.jpg", "static/img/img2.jpg", "static/img/img3.jpg"]
+                        }
+                    ];
+
+                    const productList = document.getElementById("productList");
+                    const modal = document.getElementById("productModal");
+                    const imageGallery = document.getElementById("imageGallery");
+                    const mainImage = document.getElementById("mainImage");
+                    const productName = document.getElementById("productName");
+                    const productPrice = document.getElementById("productPrice");
+
+                    function openModal(product) {
+                        document.body.appendChild(modal);
+
+                        productName.textContent = product.name;
+                        productPrice.innerHTML = `${product.price} <span class='old-price'>${product.oldPrice}</span>`;
+                        mainImage.src = product.banner;
+                        imageGallery.innerHTML = "";
+
+                        product.images.forEach(img => {
+                            const imgElem = document.createElement("img");
+                            imgElem.src = img;
+                            imgElem.onclick = () => mainImage.src = img;
+                            imageGallery.appendChild(imgElem);
+                        });
+
+                        modal.style.display = "flex";
+                    }
+
+                    function closeModal() {
+                        modal.style.display = "none";
+                    }
+
+                    products.forEach((product) => {
+                        const item = document.createElement("div");
+                        item.className = "product-item";
+                        item.innerHTML =
+                            `<img src="${product.banner}" alt=""><h3>${product.name}</h3><p class='price'>${product.price}</p>`;
+                        productList.appendChild(item);
+                    });
+
+                    document.body.addEventListener("click", (event) => {
+                        const clickedElement = event.target;
+
+                        if (clickedElement.closest(".product-item")) {
+                            const index = Array.from(document.querySelectorAll(".product-item")).indexOf(
+                                clickedElement.closest(".product-item"));
+                            openModal(products[index]);
+                        }
+
+                        if (clickedElement === modal) {
+                            closeModal();
+                        }
+                    });
+
+                    modal.querySelector(".modal-content").addEventListener("click", (event) => {
+                        event.stopPropagation();
+                    });
+                    
+                    
+                </script>
+            </div>
+        </div>
+    </div>
+    <div id="homepage-section-4">
+        <div class="homepage-section-4" style="background-color:#FFDEF3;">
+            <div class="box2">
+                <div class="box2_box1">
+                    <p class="de-heading-3_1" id="section-3-heading-1">
+                        <span>our game-changing<br> skin philosophy</span>
+                    </p>
+                    <p class="de-description-3_1">
+                        Effective, biocompatible actives—without the <br class="show-for-desktop">
+                        six ingredients that can spell trouble. <br class="show-for-desktop">
+                        We call them the Suspicious 6.
+                    </p>
+                    <button>view</button>
+                </div>
+            </div>
+            <img src="https://www.drunkelephant.com/on/demandware.static/-/Sites-drunkelephant_us-Library/default/dwad0e95b0/contentassetimages/2025/grid/US_February_Deluxe_Sample_Promo_HP_2000px.gif"
+                id="centred-image" alt="image" loading="lazy">
+        </div>
+    </div>
+</dev>

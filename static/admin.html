@@ -1,0 +1,232 @@
+<div class="container">
+    <h2>Files in static/items/</h2>
+    <button onclick="requestFiles()">View items</button>
+    <ul id="file-list"></ul>
+    <button onclick="openPopup()">Add items</button>
+    <ul id="file-list"></ul>
+</div>
+
+<style>
+
+    .container {
+        text-align: center;
+        margin-top: 50px;
+    }
+    /* Popup Overlay */
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+    /* Popup Box */
+    .popup {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 400px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    }
+    .popup h2 {
+        text-align: center;
+    }
+    .popup label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    .popup input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .popup button {
+        margin-top: 15px;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .popup .close-btn {
+        background: red;
+        color: white;
+    }
+    .popup .submit-btn {
+        background: green;
+        color: white;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+async function submitForm() {
+    // Collect form data
+    const formData = {
+        firstName: document.getElementById("firstName").value,
+        description: document.getElementById("description").value,
+        price: parseFloat(document.getElementById("price").value) || 0,
+        weight: parseFloat(document.getElementById("weight").value) || 0,
+        type: document.getElementById("type").value,
+        rank: parseInt(document.getElementById("rank").value) || 0,
+        securityKey: document.getElementById("key").value
+    };
+
+    // Convert form data to JSON
+    const jsonData = JSON.stringify(formData, null, 2);
+
+    // Create a new ZIP file
+    const zip = new JSZip();
+    zip.file("data.json", jsonData); // Add JSON file to ZIP
+
+    // Handle image files with renamed labels
+    const imageIds = ["image1", "image2", "image3", "image4", "image5"];
+    let imageFolder = null; // Create folder only if images exist
+
+    for (let i = 0; i < imageIds.length; i++) {
+        let fileInput = document.getElementById(imageIds[i]);
+        if (fileInput.files.length > 0) {
+            if (!imageFolder) {
+                imageFolder = zip.folder("images"); // Create the folder only if there are images
+            }
+            let file = fileInput.files[0];
+            let fileData = await file.arrayBuffer();
+            let newFileName = `label${i + 1}` + file.name.substring(file.name.lastIndexOf('.'));
+            imageFolder.file(newFileName, fileData);
+        }
+    }
+
+    // Generate ZIP file
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+
+    // Prepare FormData for sending
+    const formDataToSend = new FormData();
+    formDataToSend.append("file", zipBlob, "submission.zip");
+
+    // Send ZIP file via POST request
+    fetch(`/submite?key=${encodeURIComponent(formData.securityKey)}`, {
+        method: "POST",
+        body: formDataToSend
+    })
+    .then(response => response.text())
+    .then(data => {
+        alert("Submission successful!");
+        console.log("Server response:", data);
+    })
+    .catch(error => {
+        console.error("Error submitting form:", error);
+        alert("Submission failed!");
+    });
+}
+</script>
+
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+        <h2>Add Item</h2>
+        <label>First Name:</label>
+        <input type="text" id="firstName">
+
+        <label>Description:</label>
+        <input type="text" id="description">
+
+        <label>Image 1:</label>
+        <input type="file" id="image1">
+        
+        <label>Image 2:</label>
+        <input type="file" id="image2">
+        
+        <label>Image 3:</label>
+        <input type="file" id="image3">
+        
+        <label>Image 4:</label>
+        <input type="file" id="image4">
+        
+        <label>Image 5:</label>
+        <input type="file" id="image5">
+
+        <label>Price:</label>
+        <input type="number" id="price">
+
+        <label>Weight:</label>
+        <input type="number" id="weight">
+
+        <label>Type:</label>
+        <input type="text" id="type">
+
+        <label>Rank:</label>
+        <input type="number" id="rank">
+
+        <label>Security Key:</label>
+        <input type="text" id="key"> 
+
+        <button class="submit-btn" onclick="submitForm()">Submit</button>
+        <button class="close-btn" onclick="closePopup()">Close</button>
+    </div>
+</div>
+
+
+<script>
+    function requestFiles() {
+        const password = prompt("Enter password to access files:");
+        if (!password) {
+            alert("Password is required!");
+            return;
+        }
+
+        fetch(`/files?pass=${encodeURIComponent(password)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Authentication failed or failed to fetch files.");
+                }
+                return response.json();
+            })
+            .then(files => {
+                const list = document.getElementById("file-list");
+                list.innerHTML = ""; 
+                files.forEach(file => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <a href="/static/items/${file}" target="_blank">${file}</a>
+                        <button onclick="deleteFile('${file}')">Delete</button>
+                    `;
+                    list.appendChild(li);
+                });
+            })
+            .catch(error => alert(error.message));
+    }
+
+    function openPopup() {
+        document.getElementById("popupOverlay").style.display = "flex";
+    }
+
+    function closePopup() {
+        document.getElementById("popupOverlay").style.display = "none";
+    }
+
+    function deleteFile(filename) {
+
+        const password = prompt("Enter password to access files:");
+        if (!password) {
+            alert("Password is required!");
+            return;
+        }
+
+        fetch(`/delete/${filename}?pass=${encodeURIComponent(password)}`, { method: "DELETE" })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to delete file.");
+                }
+                alert(`${filename} deleted successfully!`);
+                requestFiles(); // Refresh file list
+            })
+            .catch(error => alert(error.message));
+    }
+</script>
+
