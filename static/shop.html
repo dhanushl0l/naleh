@@ -1,7 +1,8 @@
 <div class="product-list" id="productList"></div>
 <style>
     nav {
-        z-index: 0;}
+        z-index: 0;
+    }
 </style>
 <div class="search-container">
     <input type="text" class="search-input" placeholder="Search...">
@@ -14,16 +15,12 @@
         <div class="details">
             <h1 id="productName"></h1>
             <p class="price" id="productPrice"></p>
-            <p class="emi">EMI from ₹1,309/month</p>
-            <button class="add-to-cart">ADD TO CART</button>
-            <div class="info-box">
-                <h3>Delivery</h3>
-                <p>Dispatches in 24 hours</p>
+            <button class="add-to-cart" id="buy_button">Buy</button>
+            <div class="info-box" id="discription">
+                <h3>Description</h3>
             </div>
-            <div class="info-box">
-                <h3>Returns & Warranty</h3>
-                <p>7 Day Replacement Guarantee</p>
-                <p>2 Year Warranty</p>
+            <div class="info-box" id="info-box">
+                <h3>Details</h3>
             </div>
         </div>
     </div>
@@ -38,6 +35,10 @@
     const mainImage = document.getElementById("mainImage");
     const productName = document.getElementById("productName");
     const productPrice = document.getElementById("productPrice");
+    const button = document.getElementById("buy_button");
+    const discription = document.getElementById("discription");
+    const info_box = document.getElementById("info-box");
+
 
     function renderProducts(list) {
         productList.innerHTML = "";
@@ -45,16 +46,17 @@
             const item = document.createElement("div");
             item.className = "product-item";
             item.innerHTML =
-                `<img src="${product.banner}" alt=""><h3>${product.name}</h3><p class='price'>${product.price}</p>`;
+                `<img src="${product.images[0]}" alt=""><h3>${product.firstname}</h3><p class='price'> ₹ ${product.price}</p>`;
             item.onclick = () => openModal(product);
             productList.appendChild(item);
         });
     }
 
     function openModal(product) {
-        productName.textContent = product.name;
-        productPrice.innerHTML = `${product.price} <span class='old-price'>${product.oldPrice}</span>`;
-        mainImage.src = product.banner;
+        productName.textContent = product.firstname;
+        productPrice.innerHTML = `₹ ${product.price}`;
+        mainImage.src = product.images[0];
+
         imageGallery.innerHTML = "";
         product.images.forEach(img => {
             const imgElem = document.createElement("img");
@@ -62,8 +64,29 @@
             imgElem.onclick = () => mainImage.src = img;
             imageGallery.appendChild(imgElem);
         });
+
         modal.style.display = "flex";
+
+        discription.querySelectorAll("p").forEach(p => p.remove());
+
+        const discreption_p = document.createElement("p");
+        discreption_p.textContent = `${product.description}`;
+        discription.appendChild(discreption_p);
+
+        info_box.querySelectorAll("p").forEach(p => p.remove());
+
+        const info_box_weight = document.createElement("p");
+        const info_box_type = document.createElement("p");
+
+        info_box_weight.textContent = `Weight: ${product.weight} kg`;
+        info_box_type.textContent = `Type: ${product.typee}`;
+
+        info_box.appendChild(info_box_weight);
+        info_box.appendChild(info_box_type);
+
+        button.onclick = () => window.open(product.url, "_blank");
     }
+
 
     function closeModal() {
         modal.style.display = "none";
@@ -92,8 +115,8 @@
             });
     });
 
+
     document.querySelector(".search-input").addEventListener("input", function () {
         searchProducts(this.value);
     });
 </script>
- 

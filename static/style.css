@@ -1,9 +1,10 @@
 body {
-    margin: 0;
-    padding: 0;
+    margin: 0 auto;
+    padding: 0 0 100px 0;
+    display: flex;
     flex-direction: column;
-    min-height:auto;
-    padding-bottom: 100px;
+    min-height: 100vh;
+    max-width: 1500px;
 }
 
 body::before {
@@ -16,7 +17,7 @@ body::before {
     height: 200%;
     background: url('https://arc.net/noise-light.png') repeat;
     opacity: 0.8;
-    background-color: blue;
+    background-color: var(--primary-color);
     z-index: -1;
 }
 
@@ -24,15 +25,23 @@ nav {
     flex: 1;
     border-radius: 10px 10px 0 0;
     backdrop-filter: blur(15px);
-    background-color: #000000c6;
+    background-color: var(--nav);
     position: fixed;
     bottom: 0;
-    width: 100%;
     text-align: center;
     padding: 10px 0;
     z-index: 99;
 }
 
+nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw; 
+    margin: 0;
+  }
+
+  
 nav ul {
     list-style: none;
     padding: 0;
@@ -46,7 +55,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: var(--text-light);
     text-decoration: none;
     font-size: 18px;
     padding: 10px;
@@ -64,11 +73,10 @@ nav ul li a:hover {
     width: 50%;
     height: auto;
     object-fit: contain;
-    margin-top: -10%;
 }
 
 .slogon {
-    color: white;
+    color: var(--text-light);
     font-family: Marlin Soft SQ, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     text-align: center;
     font-weight: 700;
@@ -83,7 +91,7 @@ nav ul li a:hover {
 .slogon::after {
     content: '“';
     font-size: 2.5rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--transparency);
 }
 
 .slogon::after {
@@ -92,16 +100,16 @@ nav ul li a:hover {
 
 
 
-.box1 {
+/* .box1 {
     left: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
+} */
 
 .homepage-section-1 {
     width: 100%;
-    height: 100vh;
+    height: 60vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -116,9 +124,11 @@ nav ul li a:hover {
     width: 60%;
     top: 60px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     z-index: 2;
+    max-width: 1000px;
 }
+
 
 .search-input {
     width: 100%;
@@ -151,7 +161,6 @@ nav ul li a:hover {
     align-items: center;
     gap: 20px;
     padding: 20px;
-    background-color: #FFDEF3;
     border-radius: 10px;
     width: 100%;
 }
@@ -161,7 +170,6 @@ nav ul li a:hover {
     align-items: center;
     gap: 20px;
     padding: 20px;
-    background-color: #00000000;
     border-radius: 10px;
     width: 100%;
     flex-wrap: nowrap; 
@@ -174,7 +182,7 @@ nav ul li a:hover {
     align-items: flex-start;
     justify-content: flex-start;
     flex: 1;
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--transparency);
     padding: 20px;
     border-radius: 10px;
     backdrop-filter: blur(15px);
@@ -478,7 +486,7 @@ h1, h2 {
 
 /* Main Container */
 #homepage-section-about {
-    background-color: #FFDEF3;
+    background-color: var(--secondary-color);
     padding: 20px; /* This adds 20px gap inside on all sides */
     margin: 20px;
     border-radius: 12px;
@@ -487,7 +495,7 @@ h1, h2 {
   
 
 .homepage-section-about {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--transparency);
   gap: 20px;
   border-radius: 10px;
   padding: 20px;
@@ -514,7 +522,7 @@ h1, h2 {
     align-items: center;
     gap: 20px;
     padding: 20px;
-    background-color: #FFDEF3;
+    background-color: var(--secondary-color);
     border-radius: 10px;
     width: 100%;
 }
@@ -588,6 +596,9 @@ h1, h2 {
         text-align: center;
       }
 
+      .homepage-section-1 {
+        height: 50vh;
+    }
     
 }
 

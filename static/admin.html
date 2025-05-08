@@ -7,11 +7,11 @@
 </div>
 
 <style>
-
     .container {
         text-align: center;
         margin-top: 50px;
     }
+
     /* Popup Overlay */
     .popup-overlay {
         display: none;
@@ -24,22 +24,36 @@
         justify-content: center;
         align-items: center;
     }
+
     /* Popup Box */
     .popup {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        padding-left: 20px;
+        transform: translateX(-50%);
         background: white;
         padding: 20px;
         border-radius: 10px;
-        width: 400px;
+        width: fit-content;
+        max-height: 80vh;
+        overflow-y: auto;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        z-index: 3;
+        overflow-x: hidden;
     }
+
+
     .popup h2 {
         text-align: center;
     }
+
     .popup label {
         display: block;
         margin-top: 10px;
         font-weight: bold;
     }
+
     .popup input {
         width: 100%;
         padding: 8px;
@@ -47,6 +61,7 @@
         border: 1px solid #ccc;
         border-radius: 5px;
     }
+
     .popup button {
         margin-top: 15px;
         width: 100%;
@@ -55,10 +70,12 @@
         border-radius: 5px;
         cursor: pointer;
     }
+
     .popup .close-btn {
         background: red;
         color: white;
     }
+
     .popup .submit-btn {
         background: green;
         color: white;
@@ -67,64 +84,67 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-async function submitForm() {
-    // Collect form data
-    const formData = {
-        firstName: document.getElementById("firstName").value,
-        description: document.getElementById("description").value,
-        price: parseFloat(document.getElementById("price").value) || 0,
-        weight: parseFloat(document.getElementById("weight").value) || 0,
-        type: document.getElementById("type").value,
-        rank: parseInt(document.getElementById("rank").value) || 0,
-        securityKey: document.getElementById("key").value
-    };
+    async function submitForm() {
+        // Collect form data
+        const formData = {
+            firstname: document.getElementById("firstName").value,
+            description: document.getElementById("description").value,
+            price: parseInt(document.getElementById("price").value),
+            weight: parseInt(document.getElementById("weight").value),
+            typee: document.getElementById("type").value,
+            rank: parseInt(document.getElementById("rank").value),
+            url: document.getElementById("url").value,
+        };
 
-    // Convert form data to JSON
-    const jsonData = JSON.stringify(formData, null, 2);
+        const key = document.getElementById("key").value;
 
-    // Create a new ZIP file
-    const zip = new JSZip();
-    zip.file("data.json", jsonData); // Add JSON file to ZIP
 
-    // Handle image files with renamed labels
-    const imageIds = ["image1", "image2", "image3", "image4", "image5"];
-    let imageFolder = null; // Create folder only if images exist
+        // Convert form data to JSON
+        const jsonData = JSON.stringify(formData, null, 2);
 
-    for (let i = 0; i < imageIds.length; i++) {
-        let fileInput = document.getElementById(imageIds[i]);
-        if (fileInput.files.length > 0) {
-            if (!imageFolder) {
-                imageFolder = zip.folder("images"); // Create the folder only if there are images
+        // Create a new ZIP file
+        const zip = new JSZip();
+        zip.file("data.json", jsonData); // Add JSON file to ZIP
+
+        // Handle image files with renamed labels
+        const imageIds = ["image1", "image2", "image3", "image4", "image5"];
+        let imageFolder = null; // Create folder only if images exist
+
+        for (let i = 0; i < imageIds.length; i++) {
+            let fileInput = document.getElementById(imageIds[i]);
+            if (fileInput.files.length > 0) {
+                if (!imageFolder) {
+                    imageFolder = zip.folder("images"); // Create the folder only if there are images
+                }
+                let file = fileInput.files[0];
+                let fileData = await file.arrayBuffer();
+                let newFileName = `label${i + 1}` + file.name.substring(file.name.lastIndexOf('.'));
+                imageFolder.file(newFileName, fileData);
             }
-            let file = fileInput.files[0];
-            let fileData = await file.arrayBuffer();
-            let newFileName = `label${i + 1}` + file.name.substring(file.name.lastIndexOf('.'));
-            imageFolder.file(newFileName, fileData);
         }
+
+        // Generate ZIP file
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+
+        // Prepare FormData for sending
+        const formDataToSend = new FormData();
+        formDataToSend.append("file", zipBlob, "submission.zip");
+
+        // Send ZIP file via POST request
+        fetch(`/submite?key=${encodeURIComponent(key)}`, {
+            method: "POST",
+            body: formDataToSend
+        })
+            .then(response => response.text())
+            .then(data => {
+                alert("Submission successful!");
+                console.log("Server response:", data);
+            })
+            .catch(error => {
+                console.error("Error submitting form:", error);
+                alert("Submission failed!");
+            });
     }
-
-    // Generate ZIP file
-    const zipBlob = await zip.generateAsync({ type: "blob" });
-
-    // Prepare FormData for sending
-    const formDataToSend = new FormData();
-    formDataToSend.append("file", zipBlob, "submission.zip");
-
-    // Send ZIP file via POST request
-    fetch(`/submite?key=${encodeURIComponent(formData.securityKey)}`, {
-        method: "POST",
-        body: formDataToSend
-    })
-    .then(response => response.text())
-    .then(data => {
-        alert("Submission successful!");
-        console.log("Server response:", data);
-    })
-    .catch(error => {
-        console.error("Error submitting form:", error);
-        alert("Submission failed!");
-    });
-}
 </script>
 
 <div class="popup-overlay" id="popupOverlay">
@@ -138,16 +158,16 @@ async function submitForm() {
 
         <label>Image 1:</label>
         <input type="file" id="image1">
-        
+
         <label>Image 2:</label>
         <input type="file" id="image2">
-        
+
         <label>Image 3:</label>
         <input type="file" id="image3">
-        
+
         <label>Image 4:</label>
         <input type="file" id="image4">
-        
+
         <label>Image 5:</label>
         <input type="file" id="image5">
 
@@ -163,8 +183,11 @@ async function submitForm() {
         <label>Rank:</label>
         <input type="number" id="rank">
 
+        <label>url(link):</label>
+        <input type="number" id="url">
+
         <label>Security Key:</label>
-        <input type="text" id="key"> 
+        <input type="text" id="key">
 
         <button class="submit-btn" onclick="submitForm()">Submit</button>
         <button class="close-btn" onclick="closePopup()">Close</button>
@@ -189,7 +212,7 @@ async function submitForm() {
             })
             .then(files => {
                 const list = document.getElementById("file-list");
-                list.innerHTML = ""; 
+                list.innerHTML = "";
                 files.forEach(file => {
                     const li = document.createElement("li");
                     li.innerHTML = `
@@ -229,4 +252,3 @@ async function submitForm() {
             .catch(error => alert(error.message));
     }
 </script>
-
