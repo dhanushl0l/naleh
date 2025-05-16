@@ -94,7 +94,7 @@
 
     function searchProducts(searchText) {
         searchText = searchText.toLowerCase();
-        const filtered = products.filter(p => p.name.toLowerCase().includes(searchText));
+        const filtered = products.filter(p => p.firstname.toLowerCase().includes(searchText));
         renderProducts(filtered);
     }
 

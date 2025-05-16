@@ -20,6 +20,7 @@ async fn serve_page(req: HttpRequest) -> impl Responder {
         "about" => &fs::read_to_string("static/about.html").unwrap(),
         "services" => &fs::read_to_string("static/shop.html").unwrap(),
         "admin" => &fs::read_to_string("static/admin.html").unwrap(),
+        "" => &fs::read_to_string("static/home.html").unwrap(),
         _ => "<h1>404 Not Found</h1><p>The page you are looking for does not exist.</p>",
     };
 
@@ -275,10 +276,11 @@ async fn main() -> std::io::Result<()> {
             .service(afs::Files::new("/static", "static").show_files_listing())
             .route("/files", web::get().to(list_files))
             .route("/delete/{filename}", web::delete().to(delete_file))
-            .route("entry", web::get().to(entry))
-            .route("/{filename}", web::get().to(serve_page))
+            .route("/entry", web::get().to(entry))
             .route("/submite", web::post().to(submit))
             .route("/api/products", web::get().to(get_products))
+            .route("/{filename}", web::get().to(serve_page))
+            .route("/", web::get().to(serve_page))
     })
     .bind("0.0.0.0:8081")?
     .run()
