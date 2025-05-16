@@ -1,16 +1,14 @@
 use std::{
-    env,
-    fs::{self, File, create_dir_all},
+    fs::{self, File},
     io::{Cursor, Read, Write},
-    path::{Path, PathBuf},
+    path::PathBuf,
 };
 
 use actix_files as afs;
 use actix_multipart::Multipart;
-use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, get, web};
+use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, web};
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
-use serde_json::json;
 
 const PASS: Option<&str> = option_env!("PASS");
 
@@ -32,6 +30,7 @@ async fn serve_page(req: HttpRequest) -> impl Responder {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="icon" type="image/png" href="static/img/ico.ico">
             <title>{}</title>
             <style>{}</style>
             <style>{}</style>
@@ -65,7 +64,6 @@ async fn list_files(
     let path = PathBuf::from(DATABASE_PATH);
     match fs::read_dir(&path) {
         Ok(entries) => {
-            println!("{}||{}", pass, PASS.unwrap());
             if pass == PASS.unwrap() {
                 let files: Vec<String> = entries
                     .filter_map(|entry| entry.ok())
