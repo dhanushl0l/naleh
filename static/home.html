@@ -1,11 +1,6 @@
 <dev>
   <div class="search-container">
-    <input
-      type="text"
-      class="search-input"
-      placeholder="Search..."
-      id="searchBox"
-    />
+    <input type="text" class="search-input" placeholder="Search..." id="searchBox" />
   </div>
 
   <script>
@@ -27,27 +22,22 @@
     <div class="modal-content">
       <span class="close" onclick="closeModal()">×</span>
       <div class="image-gallery" id="imageGallery">
-        <img src="database/oil/image/label1.png" /><img
-          src="database/oil/image/label2.png"
-        /><img src="database/oil/image/label3.jpg" /><img
-          src="database/oil/image/label4.png"
-        />
       </div>
       <div class="main-image">
-        <img id="mainImage" src="database/oil/image/label1.png" alt="" />
+        <img id="mainImage" src="" alt="" />
       </div>
       <div class="details">
-        <h1 id="productName">oil</h1>
-        <p class="price" id="productPrice">₹ 1000</p>
+        <h1 id="productName"></h1>
+        <p class="price" id="productPrice"></p>
         <button class="add-to-cart" id="buy_button">Buy</button>
         <div class="info-box" id="discription">
           <h3>Description</h3>
-          <p>the power of gades are here to save you</p>
+          <p></p>
         </div>
         <div class="info-box" id="info-box">
           <h3>Details</h3>
-          <p>Weight: 900 kg</p>
-          <p>Type: 2</p>
+          <p></p>
+          <p></p>
         </div>
       </div>
     </div>
@@ -64,29 +54,23 @@
 
   <div id="homepage-section-4">
     <div class="homepage-section-4">
-      <img
-        src="https://www.drunkelephant.com/on/demandware.static/-/Sites-drunkelephant_us-Library/default/dwad0e95b0/contentassetimages/2025/grid/US_February_Deluxe_Sample_Promo_HP_2000px.gif"
-        id="centred-image"
-        alt="image"
-        loading="lazy"
-      />
+      <img src="static/img/banner.webp" id="centred-image" alt="image" loading="lazy" />
 
       <div class="box2">
         <div class="box2_box1">
           <p class="de-heading-3_1" id="section-3-heading-1">
-            <span
-              >our game-changing<br />
-              skin philosophy</span
-            >
+            <span>Trusted Quality<br />
+              Herbal Cosmetics</span>
           </p>
           <p class="de-description-3_1">
-            Effective, biocompatible actives—without the
+            At Naleh Cosmetics, we deliver premium herbal and
             <br class="show-for-desktop" />
-            six ingredients that can spell trouble.
+            medicated products that offer exceptional value.
+            Our commitment is to provide trustworthy,
             <br class="show-for-desktop" />
-            We call them the Suspicious 6.
+            effective solutions that truly benefit your health and skincare needs.
           </p>
-          <button>view</button>
+          <button onclick="window.location.href='/services'">view</button>
         </div>
       </div>
     </div>
@@ -97,17 +81,15 @@
       <div class="box2">
         <div class="box2_box1 box2_100">
           <p class="de-heading-3_1" id="section-3-heading-1">
-            <span
-              >our game-changing<br />
-              skin philosophy</span
-            >
+            <span>Comprehensive Service &<br />
+              Eternal Care</span>
           </p>
           <p class="de-description-3_1">
-            Effective, biocompatible actives—without the
+            We ensure seamless access to our products with dedicated services, focusing on enhancing
             <br class="show-for-desktop" />
-            six ingredients that can spell trouble.
+            your overall well-being and timeless skincare.
             <br class="show-for-desktop" />
-            We call them the Suspicious 6.
+            Experience natural care designed for lasting health and beauty.
           </p>
         </div>
       </div>
@@ -129,6 +111,12 @@
           const button = document.getElementById("buy_button");
           const discription = document.getElementById("discription");
           const info_box = document.getElementById("info-box");
+
+          window.onpopstate = function (event) {
+            if (event.state && event.state.modalOpen) {
+              modal.style.display = 'none';
+            }
+          };
 
           document.addEventListener("DOMContentLoaded", function () {
             fetch("/api/products")
@@ -174,7 +162,7 @@
             const info_box_weight = document.createElement("p");
             const info_box_type = document.createElement("p");
 
-            info_box_weight.textContent = `Weight: ${product.weight} kg`;
+            info_box_weight.textContent = `Weight: ${product.weight} g`;
             info_box_type.textContent = `Type: ${product.typee}`;
 
             info_box.appendChild(info_box_weight);
@@ -220,6 +208,8 @@
               event.stopPropagation();
             });
         </script>
+
+
       </div>
     </div>
   </div>
@@ -227,28 +217,27 @@
     <div class="homepage-section-4">
       <div class="box2">
         <div class="box2_box1">
-          <p class="de-heading-3_1" id="section-3-heading-1">
-            <span
-              >our game-changing<br />
-              skin philosophy</span
-            >
+          <p class="de-heading-3_1 de-description-3_1-r-l " id="section-3-heading-1">
+            <span>Upcoming Product Updates</span>
           </p>
-          <p class="de-description-3_1">
-            Effective, biocompatible actives—without the
+          <p class="de-description-3_1 de-description-3_1-r-l ">
+            Your favourite <em>'Naleh'</em> products<br class="show-for-desktop" />
+            are on the way to inspire your day.
             <br class="show-for-desktop" />
-            six ingredients that can spell trouble.
-            <br class="show-for-desktop" />
-            We call them the Suspicious 6.
+            Stay tuned for exciting launches packed with natural ingredients and innovative formulas crafted
+            for your
+            skin’s
+            health.
           </p>
-          <button>view</button>
+          <p class="de-description-3_1 de-description-3_1-r-l">
+
+          </p>
+          <button onclick="window.location.href='/services'">view</button>
         </div>
       </div>
-      <img
-        src="https://www.drunkelephant.com/on/demandware.static/-/Sites-drunkelephant_us-Library/default/dwad0e95b0/contentassetimages/2025/grid/US_February_Deluxe_Sample_Promo_HP_2000px.gif"
-        id="centred-image"
-        alt="image"
-        loading="lazy"
-      />
+
+
+      <img src="static/img/banner.webp" id="centred-image" alt="image" loading="lazy" />
     </div>
   </div>
 </dev>
