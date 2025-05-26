@@ -137,6 +137,8 @@
           });
 
           function openModal(product) {
+            products = products.filter(product => product.rank === 1);
+
             productName.textContent = product.firstname;
             productPrice.innerHTML = `₹ ${product.price}`;
             mainImage.src = product.images[0];

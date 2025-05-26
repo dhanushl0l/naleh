@@ -292,7 +292,7 @@ button:hover {
 }
 
 .product-item {
-    width: 200px;
+    width: 130px;
     background: white;
     padding: 15px;
     border-radius: 10px;
@@ -303,12 +303,18 @@ button:hover {
 
 .product-item img {
     width: 100%;
+    height: 100px;
+    object-fit: cover;
     border-radius: 10px;
 }
 
 .product-item h3 {
     font-size: 16px;
     margin: 10px 0;
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .product-item .price {
@@ -623,7 +629,7 @@ h2 {
     }
 
     .product-item {
-        width: 130px;
+        width: 110px;
     }
 
     .box2 {

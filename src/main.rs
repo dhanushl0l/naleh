@@ -1,6 +1,6 @@
 use std::{
     fs::{self, File},
-    io::{Cursor, Read, Write},
+    io::{BufWriter, Cursor, Read, Write},
     path::PathBuf,
 };
 
@@ -8,6 +8,7 @@ use actix_files as afs;
 use actix_multipart::Multipart;
 use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, web};
 use futures_util::StreamExt;
+use image::{ImageReader, imageops::FilterType};
 use serde::{Deserialize, Serialize};
 
 const PASS: Option<&str> = option_env!("PASS");
@@ -84,15 +85,18 @@ async fn delete_file(
     query: web::Query<std::collections::HashMap<String, String>>,
 ) -> impl Responder {
     let filename = path.into_inner();
-    let file_path = PathBuf::from(format!("static/items/{}", filename));
+    let file_path = PathBuf::from(format!("{}/{}", DATABASE_PATH, filename));
 
     let pass = query.get("pass").unwrap_or(&"".to_string()).clone();
 
     if pass == PASS.unwrap() {
         if file_path.exists() {
-            match fs::remove_file(&file_path) {
+            match fs::remove_dir_all(&file_path) {
                 Ok(_) => HttpResponse::Ok().body(format!("{} deleted successfully", filename)),
-                Err(_) => HttpResponse::InternalServerError().body("Failed to delete file"),
+                Err(err) => {
+                    println!("{:?}: {}", file_path, err);
+                    HttpResponse::InternalServerError().body("Failed to delete file")
+                }
             }
         } else {
             HttpResponse::NotFound().body("File not found")
@@ -190,6 +194,7 @@ async fn submit(
                     path.push(&name);
                     std::fs::create_dir_all(path.parent().unwrap()).unwrap();
                     let mut file = File::create(&path).unwrap();
+                    let data = compress_image(data).unwrap();
                     file.write_all(&data).unwrap();
                     path.pop();
                 }
@@ -258,6 +263,21 @@ async fn get_products() -> impl Responder {
     }
 
     HttpResponse::Ok().json(products)
+}
+
+fn compress_image(input: Vec<u8>) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    let img = ImageReader::new(Cursor::new(input))
+        .with_guessed_format()?
+        .decode()?;
+
+    // Resize (adjust size as needed)
+    let resized = img.resize(800, 600, FilterType::Lanczos3);
+
+    // Write compressed JPEG to buffer
+    let mut out_buf = Cursor::new(Vec::new());
+    resized.write_to(&mut out_buf, image::ImageFormat::WebP)?;
+
+    Ok(out_buf.into_inner())
 }
 
 use env_logger::{self, Env};
