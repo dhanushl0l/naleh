@@ -4,6 +4,8 @@
   <ul id="file-list"></ul>
   <button onclick="openPopup()">Add items</button>
   <ul id="file-list"></ul>
+  <button onclick="download_db()">Download DB</button>
+  <ul id="file-list"></ul>
 </div>
 
 <style>
@@ -221,6 +223,11 @@
         });
       })
       .catch((error) => alert(error.message));
+  }
+
+  function download_db() {
+    const url = `/download_db`;
+    window.open(url, '_blank');
   }
 
   function openPopup() {

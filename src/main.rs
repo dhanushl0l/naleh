@@ -265,6 +265,44 @@ async fn get_products() -> impl Responder {
     HttpResponse::Ok().json(products)
 }
 
+async fn download_db() -> impl Responder {
+    let mut buffer = Vec::new();
+    {
+        let mut tar_builder = tar::Builder::new(&mut buffer);
+
+        let base_path = std::path::Path::new(DATABASE_PATH);
+
+        add_dir_contents(&mut tar_builder, base_path, base_path).unwrap();
+
+        tar_builder.finish().unwrap();
+    }
+
+    HttpResponse::Ok()
+        .content_type("application/x-tar")
+        .append_header(("Content-Disposition", "attachment; filename=\"db.tar\""))
+        .body(buffer)
+}
+
+fn add_dir_contents(
+    tar: &mut tar::Builder<&mut Vec<u8>>,
+    path: &std::path::Path,
+    base: &std::path::Path,
+) -> std::io::Result<()> {
+    if path.is_dir() {
+        for entry in std::fs::read_dir(path)? {
+            let entry = entry?;
+            let path = entry.path();
+            if path.is_dir() {
+                add_dir_contents(tar, &path, base)?;
+            } else {
+                let file_path = path.strip_prefix(base).unwrap();
+                tar.append_path_with_name(&path, file_path)?;
+            }
+        }
+    }
+    Ok(())
+}
+
 fn compress_image(input: Vec<u8>) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let img = ImageReader::new(Cursor::new(input))
         .with_guessed_format()?
@@ -297,6 +335,7 @@ async fn main() -> std::io::Result<()> {
             .route("/files", web::get().to(list_files))
             .route("/delete/{filename}", web::delete().to(delete_file))
             .route("/entry", web::get().to(entry))
+            .route("/download_db", web::get().to(download_db))
             .route("/submite", web::post().to(submit))
             .route("/api/products", web::get().to(get_products))
             .route("/{filename}", web::get().to(serve_page))
