@@ -30,13 +30,13 @@
         <h1 id="productName"></h1>
         <p class="price" id="productPrice"></p>
         <button class="add-to-cart" id="buy_button">Buy</button>
-        <div class="info-box" id="discription">
-          <h3>Description</h3>
-          <p></p>
-        </div>
         <div class="info-box" id="info-box">
           <h3>Details</h3>
           <p></p>
+          <p></p>
+        </div>
+        <div class="info-box" id="discription">
+          <h3>Description</h3>
           <p></p>
         </div>
       </div>
@@ -49,6 +49,21 @@
       <!-- <div class="box1">
                 <h1 class="slogon">Nale – Nourish Your Skin, Indulge Your Senses.</h1>
             </div> -->
+    </div>
+  </div>
+
+  <div class="scroll-banner">
+    <div class="scroll-content">
+      <span> GLOW </span>
+      <span> GLOW </span>
+      <span> GLOW </span>
+      <span> GLOW </span>
+      <span> GLOW </span>
+      <span> GLOW </span>
+      <span> GLOW </span>
+      <span> GLOW </span>
+      <span> GLOW </span>
+      <span> GLOW </span>
     </div>
   </div>
 
@@ -136,43 +151,6 @@
             load();
           });
 
-          function openModal(product) {
-            products = products.filter(product => product.rank === 1);
-
-            productName.textContent = product.firstname;
-            productPrice.innerHTML = `₹ ${product.price}`;
-            mainImage.src = product.images[0];
-
-            imageGallery.innerHTML = "";
-            product.images.forEach((img) => {
-              const imgElem = document.createElement("img");
-              imgElem.src = img;
-              imgElem.onclick = () => (mainImage.src = img);
-              imageGallery.appendChild(imgElem);
-            });
-
-            modal.style.display = "flex";
-
-            discription.querySelectorAll("p").forEach((p) => p.remove());
-
-            const discreption_p = document.createElement("p");
-            discreption_p.textContent = `${product.description}`;
-            discription.appendChild(discreption_p);
-
-            info_box.querySelectorAll("p").forEach((p) => p.remove());
-
-            const info_box_weight = document.createElement("p");
-            const info_box_type = document.createElement("p");
-
-            info_box_weight.textContent = `Weight: ${product.weight} g`;
-            info_box_type.textContent = `Type: ${product.typee}`;
-
-            info_box.appendChild(info_box_weight);
-            info_box.appendChild(info_box_type);
-
-            button.onclick = () => window.open(product.url, "_blank");
-          }
-
           function closeModal() {
             modal.style.display = "none";
           }
@@ -211,7 +189,7 @@
             });
         </script>
 
-
+        <script src="static/static.js"></script>
       </div>
     </div>
   </div>

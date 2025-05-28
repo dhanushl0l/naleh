@@ -1,9 +1,8 @@
 /* colors.css */
 :root {
-    --primary-color: #b8b79e;
-    --secondary-color: #ffffff;
-    --transparency : rgba(255, 255, 255, 0.3);
-    --nav: #000000c6;
-    --text-light: #ffffff;
-  }
-  
+  --primary-color: #f0f0f0;
+  --secondary-color: #ffffff;
+  --transparency: rgba(255, 255, 255, 0.3);
+  --nav: #000000c6;
+  --text-light: #ffffff;
+}

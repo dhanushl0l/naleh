@@ -1,6 +1,6 @@
 use std::{
     fs::{self, File},
-    io::{BufWriter, Cursor, Read, Write},
+    io::{self, BufWriter, Cursor, Read, Write},
     path::PathBuf,
 };
 
@@ -115,10 +115,9 @@ struct SanitizedFormData {
     firstname: String,
     description: String,
     price: i32,
-    weight: i32,
-    typee: String,
+    weight: String,
+    details: String,
     rank: i32,
-    url: String,
 }
 
 const DATABASE_PATH: &str = "database";
@@ -166,8 +165,9 @@ async fn submit(
                 if name == "data.json" {
                     let mut json_string = String::new();
                     file.read_to_string(&mut json_string).unwrap();
+                    println!("{:?}", json_string);
+
                     data = serde_json::from_str(&json_string).unwrap();
-                    println!("{:?}", data);
                 } else if name.starts_with("images/") {
                     let filename = name
                         .strip_prefix("images/")
@@ -214,8 +214,8 @@ struct Prodects {
     firstname: String,
     description: String,
     price: i32,
-    weight: i32,
-    typee: String,
+    weight: String,
+    details: String,
     rank: i32,
     url: String,
     images: Vec<String>,
@@ -224,13 +224,18 @@ struct Prodects {
 impl Prodects {
     fn from(data: SanitizedFormData, images: Vec<String>) -> Self {
         Self {
-            firstname: data.firstname,
+            firstname: data.firstname.clone(),
             description: data.description,
             price: data.price,
             weight: data.weight,
-            typee: data.typee,
+            details: data.details,
             rank: data.rank,
-            url: data.url,
+            url: format!(
+                "&text=Hi%2C+I'm+interested+in+buying+the+following+product%3A%0A%0A%F0%9F%9B%92+Product%3A+{}%0A%F0%9F%92%B0+Price%3A+{}%0A🔗+Link%3A+{}",
+                data.firstname,
+                data.price,
+                String::new()
+            ),
             images,
         }
     }
@@ -318,13 +323,24 @@ fn compress_image(input: Vec<u8>) -> Result<Vec<u8>, Box<dyn std::error::Error>>
     Ok(out_buf.into_inner())
 }
 
+fn create_req_dir() -> Result<(), io::Error> {
+    fs::create_dir_all(DATABASE_PATH)?;
+    Ok(())
+}
+
 use env_logger::{self, Env};
-use log::info;
+use log::{error, info};
 use zip::ZipArchive;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::Builder::from_env(Env::default().filter_or("LOG", "info")).init();
+    match create_req_dir() {
+        Ok(_) => (),
+        Err(err) => {
+            error!("Error creating required path : {}", err)
+        }
+    };
 
     info!("Starting server on http://127.0.0.1:8081");
 

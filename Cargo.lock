@@ -1537,6 +1537,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "naleh"
+version = "0.2.0"
+dependencies = [
+ "actix-files",
+ "actix-multipart",
+ "actix-web",
+ "env_logger",
+ "futures-util",
+ "image",
+ "log",
+ "sanitize-filename",
+ "serde",
+ "serde_json",
+ "tar",
+ "tokio",
+ "zip",
+]
+
+[[package]]
 name = "new_debug_unreachable"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2580,25 +2599,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1a05d73b933a847d6cccdda8f838a22ff101ad9bf93e33684f39c1f5f0eece3d"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "website"
-version = "0.1.0"
-dependencies = [
- "actix-files",
- "actix-multipart",
- "actix-web",
- "env_logger",
- "futures-util",
- "image",
- "log",
- "sanitize-filename",
- "serde",
- "serde_json",
- "tar",
- "tokio",
- "zip",
 ]
 
 [[package]]

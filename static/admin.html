@@ -91,10 +91,23 @@
       firstname: document.getElementById("firstName").value,
       description: document.getElementById("description").value,
       price: parseInt(document.getElementById("price").value),
-      weight: parseInt(document.getElementById("weight").value),
-      typee: document.getElementById("type").value,
+      weight: document.getElementById("weight").value,
+      details: document.getElementById("type").value.split('&').map(part => {
+        part = part.trim();
+        const colonIndex = part.indexOf(':');
+
+        if (colonIndex !== -1) {
+          const key = part.slice(0, colonIndex).trim();
+          const value = part.slice(colonIndex + 1).trim();
+          return (key.charAt(0).toUpperCase() + key.slice(1).toLowerCase() + ': ' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase());
+        }
+
+        else {
+          part = part.toLowerCase();
+          return part.charAt(0).toUpperCase() + part.slice(1);
+        }
+      }).join('<br>'),
       rank: parseInt(document.getElementById("rank").value),
-      url: document.getElementById("url").value,
     };
 
     const key = document.getElementById("key").value;
@@ -178,14 +191,11 @@
     <label>Weight:</label>
     <input type="number" id="weight" />
 
-    <label>Type:</label>
+    <label>Details:</label>
     <input type="text" id="type" />
 
     <label>Rank:</label>
     <input type="number" id="rank" />
-
-    <label>url(link):</label>
-    <input type="url" id="url" />
 
     <label>Security Key:</label>
     <input type="text" id="key" />
