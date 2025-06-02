@@ -1,15 +1,16 @@
-use std::{
-    fs::{self, File},
-    io::{self, BufWriter, Cursor, Read, Write},
-    path::PathBuf,
-};
-
 use actix_files as afs;
 use actix_multipart::Multipart;
 use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, web};
 use futures_util::StreamExt;
 use image::{ImageReader, imageops::FilterType};
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
+use std::{
+    fs::{self, File},
+    io::{self, BufWriter, Cursor, Read, Write},
+    path::PathBuf,
+};
+use uuid::Uuid;
 
 const PASS: Option<&str> = option_env!("PASS");
 
@@ -21,6 +22,8 @@ async fn serve_page(req: HttpRequest) -> impl Responder {
         "about" => &fs::read_to_string("static/about.html").unwrap(),
         "services" => &fs::read_to_string("static/shop.html").unwrap(),
         "admin" => &fs::read_to_string("static/admin.html").unwrap(),
+        "shipment" => &fs::read_to_string("static/shipment.html").unwrap(),
+        "return" => &fs::read_to_string("static/return.html").unwrap(),
         "" => &fs::read_to_string("static/home.html").unwrap(),
         _ => "<h1>404 Not Found</h1><p>The page you are looking for does not exist.</p>",
     };
@@ -112,10 +115,10 @@ async fn entry() -> impl Responder {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct SanitizedFormData {
+    id: String,
     firstname: String,
     description: String,
     price: i32,
-    weight: String,
     details: String,
     rank: i32,
 }
@@ -166,8 +169,9 @@ async fn submit(
                     let mut json_string = String::new();
                     file.read_to_string(&mut json_string).unwrap();
                     println!("{:?}", json_string);
-
-                    data = serde_json::from_str(&json_string).unwrap();
+                    let mut json_value: Value = serde_json::from_str(&json_string).unwrap();
+                    json_value["id"] = Value::String(Uuid::new_v4().to_string());
+                    data = serde_json::from_value(json_value).unwrap();
                 } else if name.starts_with("images/") {
                     let filename = name
                         .strip_prefix("images/")
@@ -211,10 +215,10 @@ async fn submit(
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Prodects {
+    id: String,
     firstname: String,
     description: String,
     price: i32,
-    weight: String,
     details: String,
     rank: i32,
     url: String,
@@ -224,18 +228,16 @@ struct Prodects {
 impl Prodects {
     fn from(data: SanitizedFormData, images: Vec<String>) -> Self {
         Self {
+            url: format!(
+                "&text=Hi%2C+I'm+interested+in+buying+the+following+product%3A%0A%0A%F0%9F%9B%92+Product%3A+{}%0A%F0%9F%92%B0+Price%3A+{}%0A🔗+Link%3A+https://nalehcosmetics.com/services?id={}",
+                data.firstname, data.price, data.id
+            ),
+            id: data.id,
             firstname: data.firstname.clone(),
             description: data.description,
             price: data.price,
-            weight: data.weight,
             details: data.details,
             rank: data.rank,
-            url: format!(
-                "&text=Hi%2C+I'm+interested+in+buying+the+following+product%3A%0A%0A%F0%9F%9B%92+Product%3A+{}%0A%F0%9F%92%B0+Price%3A+{}%0A🔗+Link%3A+{}",
-                data.firstname,
-                data.price,
-                String::new()
-            ),
             images,
         }
     }

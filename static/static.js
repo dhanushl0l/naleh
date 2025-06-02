@@ -11,28 +11,55 @@ function openModal(product) {
         imageGallery.appendChild(imgElem);
     });
 
+
     modal.style.display = "flex";
 
     discription.querySelectorAll("p").forEach(p => p.remove());
 
     const discreption_p = document.createElement("p");
-    discreption_p.textContent = `${product.description}`;
+
+    const formattedDescription = product.description
+        .split('&')
+        .map(part => {
+            part = part.trim();
+            return part.replace(/#(.*?)#/g, (_, match) => `<b>${match}</b>`);
+        })
+        .join('<br>');
+
+    discreption_p.innerHTML = formattedDescription;
+
     discription.appendChild(discreption_p);
 
     info_box.querySelectorAll("p").forEach(p => p.remove());
 
-    const info_box_weight = document.createElement("p");
     const info_box_type = document.createElement("p");
 
-    info_box_weight.textContent = `Weight: ${product.weight}`;
-    info_box_type.innerHTML = product.details;
+    const formattedDetails = product.details
+        .split('&')
+        .map(part => {
+            part = part.trim();
 
-    info_box.appendChild(info_box_weight);
+            return part.replace(/#(.*?)#/g, (_, match) => `<b>${match}</b>`);
+        })
+        .join('<br>');
+
+    info_box_type.innerHTML = formattedDetails;
+
+    const url = new URL(window.location);
+    url.searchParams.set("id", product.id);
+    window.history.pushState({}, "", url);
+
     info_box.appendChild(info_box_type);
     button.onclick = () => {
         const url = navigator.userAgent.match(/Mobi|Android/i)
             ? `https://wa.me/8300299101?${product.url}`
-            : `https://web.whatsapp.com/send?phone=8300299101&${product.url}`;
+            : `https://web.whatsapp.com/send?phone=+918300299101&${product.url}`;
         window.open(url, "_blank");
     };
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            closeModal();
+        }
+    });
 }

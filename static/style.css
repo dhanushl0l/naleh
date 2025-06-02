@@ -1,3 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Quicksand&display=swap');
+
+body {
+    font-family: 'Quicksand', sans-serif;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Josefin Sans', sans-serif;
+}
+
 body {
     margin: 0 auto;
     padding: 0 0 100px 0;
@@ -88,7 +100,7 @@ nav ul li a:hover {
 
 .slogon {
     color: var(--text-light);
-    font-family: Marlin Soft SQ, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    /* font-family: Marlin Soft SQ, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif; */
     text-align: center;
     font-weight: 700;
     font-size: 2rem;
@@ -248,14 +260,14 @@ nav ul li a:hover {
     font-size: 30px;
     font-weight: bold;
     color: #333;
-    font-family: 'Cinzel Decorative', serif;
+    /* font-family: 'Cinzel Decorative', serif; */
 }
 
 .de-description-3_1 {
     font-size: 16px;
     color: #555;
     margin-top: 10px;
-    font-family: 'Cinzel Decorative', serif;
+    /* font-family: 'Cinzel Decorative', serif; */
 }
 
 .de-description-3_1-r-l {
@@ -284,34 +296,34 @@ button:hover {
 .scroll-banner {
     overflow: hidden;
     white-space: nowrap;
-    color: #c0b825;
-    font-size: 10vh;
-    font-weight: 900;
     width: 100%;
+    height: 13vh;
     position: relative;
-    height: 10vh;
-    line-height: 10vh;
-    border-radius: 12px;
-    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.scroll-content span {
-    margin: 150px;
 }
 
 .scroll-content {
     display: inline-block;
     white-space: nowrap;
-    animation: scrollText 90s linear infinite;
+    animation: scrollText 25s linear infinite;
 }
 
+.scroll-content span {
+    margin-right: 2rem;
+    font-size: 10vh;
+    font-weight: 900;
+    color: #c0b825;
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Keyframes */
 @keyframes scrollText {
     0% {
-        transform: translateX(0);
+        transform: translateX(50%);
     }
 
     100% {
-        transform: translateX(-50%);
+
+        transform: translateX(-100%);
     }
 }
 
@@ -325,10 +337,13 @@ button:hover {
 }
 
 #info-box p {
-    margin-bottom: 0.5em;
+    margin-top: 7px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
 }
 
 .product-list {
@@ -370,8 +385,8 @@ button:hover {
 }
 
 .product-item h3 {
-    font-size: 15px;
-    margin: 10px 0 6px;
+    font-size: 17px;
+    margin: 15px 0 6px;
     padding: 0 10px;
     height: 38px;
     overflow: hidden;
@@ -504,12 +519,12 @@ button:hover {
 }
 
 .info-box h3 {
-    margin: 0 0 10px;
+    margin: 0;
     font-size: 16px;
 }
 
 .info-box p {
-    margin: 5px 0;
+    margin-top: 7px;
     font-size: 14px;
     color: #555;
 }

@@ -42,7 +42,15 @@
 
     function renderProducts(list) {
         productList.innerHTML = "";
+        const url = new URL(window.location.href);
+        const action = url.searchParams.get("id");
+
         list.forEach(product => {
+            if (action) {
+                if (product.id == action) {
+                    openModal(product);
+                }
+            }
             const item = document.createElement("div");
             item.className = "product-item";
             item.innerHTML =
@@ -84,5 +92,4 @@
         searchProducts(this.value);
     });
 </script>
-
 <script src="static/static.js"></script>

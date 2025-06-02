@@ -17,3 +17,4 @@ sanitize-filename = "0.6.0"
 image = "0.25"
 tar = "0.4.44"
 zip = "4.0.0"
+uuid = { version = "1", features = ["v4"] }
