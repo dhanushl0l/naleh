@@ -93,6 +93,7 @@
       price: parseInt(document.getElementById("price").value),
       rank: parseInt(document.getElementById("rank").value),
       details: document.getElementById("type").value,
+      url: document.getElementById("url").value,
     };
 
     const key = document.getElementById("key").value;
@@ -179,6 +180,9 @@
     <label>Rank:</label>
     <input type="number" id="rank" />
 
+    <label>Buy link:</label>
+    <input type="text" id="url" />
+
     <label>Security Key:</label>
     <input type="text" id="key" />
 
@@ -210,6 +214,7 @@
           li.innerHTML = `
                         <a href="/static/items/${file}" target="_blank">${file}</a>
                         <button onclick="deleteFile('${file}')">Delete</button>
+                        <button onclick="editFile('${file}')">Edit</button>
                     `;
           list.appendChild(li);
         });
@@ -245,8 +250,37 @@
           throw new Error("Failed to delete file.");
         }
         alert(`${filename} deleted successfully!`);
-        requestFiles(); // Refresh file list
+        requestFiles();
       })
       .catch((error) => alert(error.message));
   }
+
+  function editFile(filename) {
+    fetch(`/get-item?item=${filename}`)
+      .then(response => response.json())
+      .then(json => {
+        const data = JSON.parse(json.data);
+        openPopup_with_data(data);
+        console.log(data.firstname);
+      })
+      .catch(error => console.error('Error:', error));
+
+  }
+
+  function openPopup_with_data(data) {
+    console.log("Received data:", data);
+    document.getElementById('firstName').value = data.firstname;
+    document.getElementById('description').value = data.description;
+    document.getElementById('price').value = data.price;
+    document.getElementById('type').value = data.details;
+    document.getElementById('rank').value = data.rank;
+    document.getElementById('url').value = data.url;
+    for (let i = 1; i <= 5; i++) {
+      document.getElementById(`image${i}`).value = '';
+    }
+
+    document.getElementById("popupOverlay").style.display = "flex";
+  }
+
+
 </script>

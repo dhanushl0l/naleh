@@ -4,7 +4,7 @@ use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, web};
 use futures_util::StreamExt;
 use image::{ImageReader, imageops::FilterType};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use serde_json::{Value, json};
 use std::{
     fs::{self, File},
     io::{self, BufWriter, Cursor, Read, Write},
@@ -109,6 +109,23 @@ async fn delete_file(
     }
 }
 
+async fn get_item(query: web::Query<std::collections::HashMap<String, String>>) -> impl Responder {
+    let filename = query.get("item").unwrap_or(&"".to_string()).clone();
+    let file_path = PathBuf::from(format!("{}/{}/user.json", DATABASE_PATH, filename));
+
+    if file_path.exists() {
+        match fs::read_to_string(&file_path) {
+            Ok(file) => HttpResponse::Ok().json(json!({ "data": file })),
+            Err(err) => {
+                println!("{:?}: {}", file_path, err);
+                HttpResponse::InternalServerError().body("Failed to delete file")
+            }
+        }
+    } else {
+        HttpResponse::NotFound().body("File not found")
+    }
+}
+
 async fn entry() -> impl Responder {
     HttpResponse::NotFound().body("unauthorized access")
 }
@@ -121,6 +138,7 @@ struct SanitizedFormData {
     price: i32,
     details: String,
     rank: i32,
+    url: String,
 }
 
 const DATABASE_PATH: &str = "database";
@@ -228,10 +246,7 @@ struct Prodects {
 impl Prodects {
     fn from(data: SanitizedFormData, images: Vec<String>) -> Self {
         Self {
-            url: format!(
-                "&text=Hi%2C+I'm+interested+in+buying+the+following+product%3A%0A%0A%F0%9F%9B%92+Product%3A+{}%0A%F0%9F%92%B0+Price%3A+{}%0A🔗+Link%3A+https://nalehcosmetics.com/services?id={}",
-                data.firstname, data.price, data.id
-            ),
+            url: data.url,
             id: data.id,
             firstname: data.firstname.clone(),
             description: data.description,
@@ -351,6 +366,7 @@ async fn main() -> std::io::Result<()> {
             .service(afs::Files::new("/database", "./database").show_files_listing())
             .service(afs::Files::new("/static", "static").show_files_listing())
             .route("/files", web::get().to(list_files))
+            .route("/get-item", web::get().to(get_item))
             .route("/delete/{filename}", web::delete().to(delete_file))
             .route("/entry", web::get().to(entry))
             .route("/download_db", web::get().to(download_db))

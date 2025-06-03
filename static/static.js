@@ -51,9 +51,7 @@ function openModal(product) {
 
     info_box.appendChild(info_box_type);
     button.onclick = () => {
-        const url = navigator.userAgent.match(/Mobi|Android/i)
-            ? `https://wa.me/8300299101?${product.url}`
-            : `https://web.whatsapp.com/send?phone=+918300299101&${product.url}`;
+        const url = product.url;
         window.open(url, "_blank");
     };
 
@@ -63,3 +61,13 @@ function openModal(product) {
         }
     });
 }
+
+window.addEventListener('load', () => {
+    document.querySelectorAll('img').forEach(img => {
+        if (!img.complete || img.naturalWidth === 0) {
+            const src = img.getAttribute('src');
+            const newSrc = src.includes('?') ? `${src}&reload=${Date.now()}` : `${src}?reload=${Date.now()}`;
+            img.setAttribute('src', newSrc);
+        }
+    });
+});
