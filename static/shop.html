@@ -60,10 +60,6 @@
         });
     }
 
-    function closeModal() {
-        modal.style.display = "none";
-    }
-
     function searchProducts(searchText) {
         searchText = searchText.toLowerCase();
         const filtered = products.filter(p => p.firstname.toLowerCase().includes(searchText));

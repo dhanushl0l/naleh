@@ -71,3 +71,11 @@ window.addEventListener('load', () => {
         }
     });
 });
+
+function closeModal() {
+    modal.style.display = "none";
+
+    const url = new URL(window.location);
+    url.searchParams.delete("id");
+    window.history.replaceState({}, "", url);
+}

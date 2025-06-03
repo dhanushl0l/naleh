@@ -386,14 +386,15 @@ button:hover {
 
 .product-item h3 {
     font-size: 17px;
+    line-height: 21px;
     margin: 15px 0 6px;
     padding: 0 10px;
-    height: 42px;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     text-overflow: ellipsis;
+    max-height: 42px;
 }
 
 .product-item .price {
