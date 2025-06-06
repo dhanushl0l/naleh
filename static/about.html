@@ -8,12 +8,101 @@
     <div id="homepage-section-about">
         <div class="homepage-section-about">
             <h2>Support</h2>
-            <p>If you're not satisfied with your purchase, you can return it within 1 week of delivery for full
-                replacement
-                or exchange, only with video/photo proof of damaged product and payment screenshot. Check our <a
-                    href="faq.html">FAQ section</a> for details.</p>
+            <p><strong>Customer service is our first priority.</strong></p>
+
+            <p>For feedback or queries, please contact us at:<br>
+                <!-- Feedback Trigger -->
+                <a href="#" onclick="event.preventDefault(); openFeedbackForm()">Click here to give your feedback</a>
+            <p>
+                Or mail us at the address below:<br>
+                📧 <a href="mailto:nalehcosmetics@gmail.com">nalehcosmetics@gmail.com</a>
+            </p>
+
+            <!-- Feedback Popup -->
+            <div id="feedbackPopup" class="popup">
+                <div class="popup-content">
+                    <h3>Send Feedback</h3>
+                    <form onsubmit="submitFeedback(); return false;">
+                        <label for="name">Name:</label><br>
+                        <input type="text" id="name" required><br><br>
+
+                        <label for="email">Email:</label><br>
+                        <input type="email" id="email" required><br><br>
+
+                        <label for="subject">Subject:</label><br>
+                        <input type="text" id="subject" required><br><br>
+
+                        <label for="message">Message:</label><br>
+                        <textarea id="message" rows="4" required></textarea><br><br>
+
+                        <button type="submit">Send</button>
+                        <button type="button" onclick="closeFeedbackForm()">Close</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Overlay -->
+            <div id="overlay" class="overlay" onclick="closeFeedbackForm()"></div>
+
+            <!-- JS -->
+            <script>
+                function openFeedbackForm() {
+                    const popup = document.getElementById('feedbackPopup');
+                    popup.style.display = 'block'; // <== this line is missing
+                    // Force reflow so CSS animation works
+                    void popup.offsetWidth;
+                    popup.classList.add('show');
+                    document.getElementById('overlay').style.display = 'block';
+                }
+
+
+                function closeFeedbackForm() {
+                    const popup = document.getElementById('feedbackPopup');
+                    popup.classList.remove('show');
+                    setTimeout(() => popup.style.display = 'none', 200);
+                    document.getElementById('overlay').style.display = 'none';
+                }
+
+                function submitFeedback() {
+                    submitEmail(document.getElementById('name').value, document.getElementById('email').value, document.getElementById('subject').value, document.getElementById('message').value)
+                        .then(data => console.log('Success'))
+                        .catch(err => console.error('Error:', err));
+                    closeFeedbackForm();
+                }
+
+                async function submitEmail(name, email, subject, message) {
+                    const payload = { name, email, subject, message };
+
+                    try {
+                        const response = await fetch('/submit_email', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Server error: ${response.status}`);
+                        }
+
+                        // if response is plain text or empty
+                        const text = await response.text();
+                        return text;
+
+                    } catch (err) {
+                        console.error('Submit failed:', err);
+                        throw err;
+                    }
+                }
+
+
+            </script>
+
+            <p><strong>Note:</strong></p>
+            <p> Your feedback helps us improve our products and services.
+            </p>
             <h3>Return & Replacement Policy</h3>
-            <p>We offer 100% replacement including shipping charges. Shipping amount will be credited within 4 business
+            <p>We offer 100% replacement including shipping charges. Shipping amount will be credited within 4
+                business
                 days
                 upon providing shipping bill proof. Visit <a href="/return">Returns & Refunds</a> for complete
                 policy.

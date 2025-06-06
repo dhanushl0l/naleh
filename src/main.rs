@@ -1,11 +1,16 @@
 use actix_files as afs;
-use actix_multipart::Multipart;
+use actix_multipart::{Multipart, form::json};
 use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, web};
 use futures_util::StreamExt;
 use image::{ImageReader, imageops::FilterType};
+use lettre::{
+    AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor, message::header::ContentType,
+    transport::smtp::authentication::Credentials,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::{
+    error::Error,
     fs::{self, File},
     io::{self, BufWriter, Cursor, Read, Write},
     path::PathBuf,
@@ -305,6 +310,47 @@ async fn download_db() -> impl Responder {
         .body(buffer)
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct EmailSubmission {
+    pub name: String,
+    pub email: String,
+    pub subject: String,
+    pub message: String,
+}
+
+async fn submit_email(payload: web::Json<EmailSubmission>) -> impl Responder {
+    send_mail(&payload).await.unwrap();
+    HttpResponse::Ok().body("body")
+}
+
+const SMTP_USERNAME: Option<&str> = option_env!("SMTP_USERNAME");
+const SMTP_PASSWORD: Option<&str> = option_env!("SMTP_PASSWORD");
+
+pub async fn send_mail(user: &EmailSubmission) -> Result<(), Box<dyn Error>> {
+    let email = Message::builder()
+        .from(format!("nalehcosmetics.com website support <{}>", user.email).parse()?)
+        .to(format!("{} <{}>", user.name, user.email).parse()?)
+        .subject(format!(
+            "Support mail from nalehcosmetics.com. User: {}",
+            user.name
+        ))
+        .header(ContentType::TEXT_PLAIN)
+        .body(format!("{}", user.message))?;
+
+    let creds = Credentials::new(
+        SMTP_USERNAME.unwrap().to_owned(),
+        SMTP_PASSWORD.unwrap().to_owned(),
+    );
+
+    let mailer: AsyncSmtpTransport<Tokio1Executor> =
+        AsyncSmtpTransport::<Tokio1Executor>::relay("smtp.gmail.com")?
+            .credentials(creds)
+            .build();
+
+    mailer.send(email).await?;
+    Ok(())
+}
+
 fn add_dir_contents(
     tar: &mut tar::Builder<&mut Vec<u8>>,
     path: &std::path::Path,
@@ -372,6 +418,7 @@ async fn main() -> std::io::Result<()> {
             .route("/download_db", web::get().to(download_db))
             .route("/submite", web::post().to(submit))
             .route("/api/products", web::get().to(get_products))
+            .route("/submit_email", web::post().to(submit_email))
             .route("/{filename}", web::get().to(serve_page))
             .route("/", web::get().to(serve_page))
     })
