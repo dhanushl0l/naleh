@@ -11,14 +11,12 @@
             <p><strong>Customer service is our first priority.</strong></p>
 
             <p>For feedback or queries, please contact us at:<br>
-                <!-- Feedback Trigger -->
                 <a href="#" onclick="event.preventDefault(); openFeedbackForm()">Click here to give your feedback</a>
             <p>
                 Or mail us at the address below:<br>
                 📧 <a href="mailto:nalehcosmetics@gmail.com">nalehcosmetics@gmail.com</a>
             </p>
 
-            <!-- Feedback Popup -->
             <div id="feedbackPopup" class="popup">
                 <div class="popup-content">
                     <h3>Send Feedback</h3>
@@ -48,8 +46,7 @@
             <script>
                 function openFeedbackForm() {
                     const popup = document.getElementById('feedbackPopup');
-                    popup.style.display = 'block'; // <== this line is missing
-                    // Force reflow so CSS animation works
+                    popup.style.display = 'block';
                     void popup.offsetWidth;
                     popup.classList.add('show');
                     document.getElementById('overlay').style.display = 'block';
