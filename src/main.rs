@@ -12,7 +12,7 @@ use serde_json::{Value, json};
 use std::{
     error::Error,
     fs::{self, File},
-    io::{self, BufWriter, Cursor, Read, Write},
+    io::{self, Cursor, Read, Write},
     path::PathBuf,
 };
 use uuid::Uuid;
@@ -38,10 +38,26 @@ async fn serve_page(req: HttpRequest) -> impl Responder {
         <!DOCTYPE html>
         <html lang="en">
         <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="icon" type="image/png" href="static/img/ico.ico">
-            <title>{}</title>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link rel="icon" type="image/png" href="static/img/ico.ico" />
+            <title>nale cosmetics - affordable natural care {} page</title>
+
+            <!-- SEO Meta Tags -->
+            <meta name="description" content="Nale Cosmetics, founded in March 2025 in Tamil Nadu, India, offers high-quality and affordable personal care products that enhance your natural beauty." />
+            <meta name="keywords" content="Nale, Nale Cosmetics, skincare, personal care, natural beauty, cosmetics India, Tamil Nadu beauty products" />
+            <meta name="author" content="Nale Cosmetics" />
+            <meta name="robots" content="index, follow" />
+            <meta name="language" content="en" />
+            <meta name="revisit-after" content="7 days" />
+
+            <!-- Open Graph for social sharing -->
+            <meta property="og:title" content="Nale Cosmetics - Enhance Your Natural Beauty" />
+            <meta property="og:description" content="Shop high-quality, affordable personal care products made in Tamil Nadu, India." />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="https://nalehcosmetics.com" />
+            <meta property="og:image" content="static/img/logo.webp" />
+
             <style>{}</style>
             <style>{}</style>
         </head>
@@ -57,7 +73,7 @@ async fn serve_page(req: HttpRequest) -> impl Responder {
         </body>
         </html>
         "#,
-        page.to_uppercase(),
+        page,
         &fs::read_to_string("static/style.css").unwrap(),
         &fs::read_to_string("static/colors.css").unwrap(),
         content

@@ -29,6 +29,62 @@
                 Your shipping cost will be refunded to your bank account within <strong>4 business days</strong>,
                 provided a valid shipping bill screenshot is submitted.
             </p>
+
+            <hr>
+
+            <h3>Need Help?</h3>
+            <p>
+                If you’re facing any issue or need support,
+                <strong><a href="#" id="whatsapp-trigger">click here to chat with us on WhatsApp</a></strong>.
+            <div id="whatsapp-popup" class="popup">
+                <span class="close" id="popup-close">&times;</span>
+                <p>Choose how to open WhatsApp:</p>
+                <a href="https://api.whatsapp.com/send/?phone=+918300299101&text=Hello%2C%20I%E2%80%99m%20facing%20an%20issue%20with%20my%20return%20and%20would%20like%20some%20assistance.%20Could%20you%20please%20help%20me%3F&type=phone_number&app_absent=0"
+                    target="_blank">Open in WhatsApp App</a><br>
+                <a href="https://web.whatsapp.com/send?phone=918300299101&text=Hello%2C%20I%E2%80%99m%20facing%20an%20issue%20with%20my%20return%20and%20would%20like%20some%20assistance.%20Could%20you%20please%20help%20me%3F"
+                    target="_blank">Open in WhatsApp web</a>
+            </div>
+            </p>
         </div>
     </div>
 </section>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const trigger = document.getElementById("whatsapp-trigger");
+        const popup = document.getElementById("whatsapp-popup");
+        const closeBtn = document.getElementById("popup-close");
+
+        trigger.addEventListener("click", function (e) {
+            e.preventDefault();
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            if (isMobile) {
+                window.location.href = `https://api.whatsapp.com/send/?phone=+918300299101&text=Hello%2C%20I%E2%80%99m%20facing%20an%20issue%20with%20my%20return%20and%20would%20like%20some%20assistance.%20Could%20you%20please%20help%20me%3F&type=phone_number&app_absent=0`;
+            } else {
+                popup.style.display = "block";
+            }
+        });
+
+        closeBtn.addEventListener("click", function () {
+            popup.style.display = "none";
+        });
+    });
+</script>
+
+<style>
+    .popup {
+        display: none;
+        align-items: center;
+        align-content: center;
+        text-align: center;
+        width: 250px;
+        opacity: 1;
+    }
+
+    @media (max-width: 750px) {
+        .popup {
+            height: 150px;
+        }
+    }
+</style>
