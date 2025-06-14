@@ -155,9 +155,9 @@
                 }
                 const item = document.createElement("div");
                 item.className = "product-item";
-                const labelImage = product.images.find(img => img.endsWith("label1.jpg"));
+                product.images.sort();
                 item.innerHTML =
-                  `<img src="${labelImage}" alt=""><h3>${product.firstname}</h3><p class='price'> ₹ ${product.price}</p>`;
+                  `<img src="${product.images[0]}" alt=""><h3>${product.firstname}</h3><p class='price'> ₹ ${product.price}</p>`;
                 item.onclick = () => openModal(product);
                 productList.appendChild(item);
               }
