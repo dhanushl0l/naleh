@@ -1,7 +1,7 @@
 function openModal(product) {
     productName.textContent = product.firstname;
     productPrice.innerHTML = `₹ ${product.price}`;
-    mainImage.src = product.images[0];
+    mainImage.src = product.images.find(img => img.endsWith("label1.jpg"));
 
     imageGallery.innerHTML = "";
     product.images.forEach(img => {

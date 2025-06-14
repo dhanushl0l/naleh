@@ -345,7 +345,7 @@ const SMTP_PASSWORD: Option<&str> = option_env!("SMTP_PASSWORD");
 pub async fn send_mail(user: &EmailSubmission) -> Result<(), Box<dyn Error>> {
     let email = Message::builder()
         .from(format!("nalehcosmetics.com website support <{}>", user.email).parse()?)
-        .to(format!("{} <{}>", user.name, user.email).parse()?)
+        .to(format!("Nalehcosmetics <nalehcosmetics@gmail.com>").parse()?)
         .subject(format!(
             "Support mail from nalehcosmetics.com. User: {}",
             user.name

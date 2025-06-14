@@ -8,9 +8,8 @@
       .getElementById("searchBox")
       .addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
-          // Check if Enter key is pressed
-          event.preventDefault(); // Prevent form submission (if inside a form)
-          const query = encodeURIComponent(this.value.trim()); // Get input value
+          event.preventDefault();
+          const query = encodeURIComponent(this.value.trim());
           if (query) {
             window.location.href = `/services?searchterm=${query}`;
           }
@@ -143,28 +142,24 @@
           });
 
           function load() {
-            products.forEach((product) => {
+            productList.innerHTML = "";
+            const url = new URL(window.location.href);
+            const action = url.searchParams.get("id");
+
+            products.forEach(product => {
               if (product.rank == 1) {
+                if (action) {
+                  if (product.id == action) {
+                    openModal(product);
+                  }
+                }
                 const item = document.createElement("div");
                 item.className = "product-item";
-                item.innerHTML = `<img src="${product.images[0]}" alt=""><h3>${product.firstname}</h3><p class='price'> ₹ ${product.price}</p>`;
+                const labelImage = product.images.find(img => img.endsWith("label1.jpg"));
+                item.innerHTML =
+                  `<img src="${labelImage}" alt=""><h3>${product.firstname}</h3><p class='price'> ₹ ${product.price}</p>`;
                 item.onclick = () => openModal(product);
                 productList.appendChild(item);
-              }
-            });
-
-            document.body.addEventListener("click", (event) => {
-              const clickedElement = event.target;
-
-              if (clickedElement.closest(".product-item")) {
-                const index = Array.from(
-                  document.querySelectorAll(".product-item"),
-                ).indexOf(clickedElement.closest(".product-item"));
-                openModal(products[index]);
-              }
-
-              if (clickedElement === modal) {
-                closeModal();
               }
             });
           }
